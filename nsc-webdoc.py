@@ -73,7 +73,7 @@ def split_payload(data):
 		offset = 2
 		# Strip markdown formatting if there
 		if title[0:2] == "# ":
-			offset = 1 
+			offset = 1
 			title = title[3:]
 
 	content="\n".join(payload[offset:lastline])
@@ -106,7 +106,7 @@ def metadata_match(metadb,query):
 	for (key,val) in query.iteritems():
 		if key not in metadb:
 			result = False
-			return result 
+			return result
 		else:
 			# Is this a YAML list?
 			if type(metadb[key]) == list:
@@ -119,7 +119,7 @@ def metadata_match(metadb,query):
 					else:
 						if i == val:
 							found = True
-				
+
 				if not found:
 					result = False
 					return result
@@ -148,7 +148,7 @@ def generate_doc(tree,toplevel,basepath,path,level,breadcrumb,metadb,system):
 		filename = (basepath + "/" + "README.NSC")
 	else:
 		filename = (basepath + path + "/" + "README.NSC")
-	
+
 	if options.verbose:
 		print "Input : ", filename
 
@@ -220,7 +220,7 @@ def generate_doc(tree,toplevel,basepath,path,level,breadcrumb,metadb,system):
 	# Render page from template
 	template = Template(filename="static/README.template",input_encoding="utf-8",output_encoding="utf-8",default_filters=['decode.utf8'])
 	html = template.render(pagename=leafname,payload1=title,payload2=content,tree=toplevel,basename=basename,versions = sorted(versionlist),level=level,breadcrumb=bc,metadata=file_metadata,system=system)
-	
+
 	# Custom postprocessing
 	html = html.replace("<table>","<table class=\"table table-striped table-condensed\">")
 
@@ -268,6 +268,10 @@ if not os.path.exists(basedir):
 	print "It seems like the give path to a software installation directory %s, does not exist." % (basedir)
 	sys.exit(1)
 
+# Create output dir if doesn't exist.
+if not os.path.isdir("output"):
+	os.mkdir("output")
+
 # Find documentation files
 if os.path.exists("filenames.cache") and not options.rebuild:
 	if options.verbose:
@@ -284,7 +288,7 @@ else:
 	# these mess up the parsing of filenames. There could be more like this...
 	readmes = filter(lambda x: x[0:6] != "find: ",readmes)
 	readmes.sort()
-	
+
 	# Create cache file
 	if len(readmes) >= 1 and readmes[0] != '':
 		if not options.dryrun:
@@ -316,7 +320,7 @@ for readme in readmes:
 
 	file_metadata = extract_metadata(readme)
 	if file_metadata != {}:
-		metadata[readme] = file_metadata 
+		metadata[readme] = file_metadata
 		if options.verbose:
 			for (key,value) in file_metadata.items():
 				print " *",key, ":", value
