@@ -1,0 +1,36 @@
+Software at NSC
+===============
+
+General disclaimer
+----------
+<div class="alert">
+NSC takes no responsibility for the correctness of
+results produced with the binaries! Hence, always evaluate the
+binaries against known results for the systems and properties you are
+investigating before using the binaries for production jobs.  
+</div>
+
+Default versions 
+----------------
+Any modules marked as "default" denote the versions currently recommended by 
+NSC and represent our best effort to produce binaries that are as fast and 
+correct as possible. Naturally, NSC strives to maximise the performance of all
+maintained systems for the benefit of all users, and are therefore continuously 
+working to maximise performance of all installed software. However, as to not 
+disrupt stability of ongoing projects, old versions are never changed or 
+removed unless there are very strong reasons to do so (e.g. severe security
+issues, or if discovered to always produce erroneous results).
+
+What exact versions are considered "default" are by necessity subject to 
+immediate change, without prior notice. While this in principle should not
+have any negative side-effects, 100% consistent behavior is impossible to 
+guarantee. Therefore, if your project is absolutely dependent on guaranteed 
+100% identical reproducible behaviour, you should not use a "default" module, 
+but rather select a specific version of the software.
+
+However, by selecting a specific software version, you are taking the 
+responsibility upon yourself to evaluate any and all newer installations as 
+they are made available, and make the transition as soon as you have verified 
+that the software meets your requirements. You are also encouraged to always 
+select the newest possible version for new projects. 
+

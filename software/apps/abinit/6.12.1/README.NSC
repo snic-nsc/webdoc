@@ -1,0 +1,55 @@
+ABINIT 6.12.1 at NSC
+=============================
+
+This version of ABINIT was released on Jan 31th 2012, and the installation was prepared by Peter Larsson.
+
+Module name
+-----------
+
+	module load abinit/6.12.1
+
+Level of support
+----------------
+
+Currently, ABINIT 6.12.1 is unsupported software, so we cannot guarantee extensive help, but our goal is to have ABINIT as stable production software at NSC, so all feedback and questions are appreciated, please contact NSC Support, support@nsc.liu.se.
+
+How to run
+----------
+
+Suppose that you have prepared you Abinit job as prescribed with job.in, job.files etc. Then simply put the 
+following in the job script.
+
+	mpprun /software/testing/abinit/6.12.1/bin/abinip < job.files >& log
+
+Compile info
+------------
+
+Modules:
+
+    module load intel/12.1.0 mkl/10.3.6.233 impi/4.0.3.008
+
+Configure:
+
+    ./configure --enable-mpi --with-linalg-flavor="mkl" FC="ifort" FCFLAGS="-O1 -ip -mssse3 -march=core2 -mtune=core2  -Nmkl -Nmpi" --with-fft-flavor=fftw3 LDFLAGS="-O -ip -Nmkl -Nmpi" --with-fft-libs="-lmkl_intel_lp64 -lmkl_sequential -lmkl_core" CC=icc CFLAGS="-O1 -ip -mssse3 -march=core2 -mtune=core2 " --enable-gw-dpc CXX=icpc CXXFLAGS="-O1 -ip -mssse3 -march=core2 -mtune=core2" --prefix=/software/testing/abinit/6.12.1
+    
+Please note that the discrepancy between --with-fft-flavor and --with-fft-libs is intentional. We want to use 
+Intel's FFT subroutines, but through the FFTW3 interface. Preliminary testing on single node calculations 
+indicates that fftalg=112 is faster, however. 
+
+Test suite results
+------------------
+
+ABINIT comes with a comprehensive test suite. So far, I have run the "minimal" test suite (which still contains 
+several hundred calculations). Only one case failed, as can be seen below:
+
+	[pla@matter1 tests]$ grep -R failed v*/tmp-test_Linux_20120228/report
+	v1/tmp-test_Linux_20120228/report:Case_68            failed (too many erroneous lines : 1 , accepted 0 ) 
+
+I looked at the test case in detail and the total energy is accurate to 14 digits, so it looks OK to me. The one 
+line difference is probably a result of choosing a different default FFT algorithm (312 vs 112).
+
+--- BEGIN METADATA ---
+description: released 2012-xx-yyy
+systems: [Triolith,Matter]
+supported: no
+--- END METADATA ---

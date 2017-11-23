@@ -1,0 +1,223 @@
+Gaussian
+========
+
+Policy
+------
+
+The Gaussian quantum chemistry program is available to users at NSC under the condition that published work include citation of the program ( further details ). Two versions of the program are provided at present: Gaussian 98 and Gaussian 03.
+
+Program citations
+-----------------
+
+Note: Please, check which revision you are running in the program output.
+
+### **Gaussian 03**, Revision C.02 (or D.01) 
+
+<div class="well">
+M. J. Frisch, G. W. Trucks, H. B. Schlegel, G. E. Scuseria, M. A. Robb, J. R. Cheeseman, J. A. Montgomery, Jr., T. Vreven, K. N. Kudin, J. C. Burant, J. M. Millam, S. S. Iyengar, J. Tomasi, V. Barone, B. Mennucci, M. Cossi, G. Scalmani, N. Rega, G. A. Petersson, H. Nakatsuji, M. Hada, M. Ehara, K. Toyota, R. Fukuda, J. Hasegawa, M. Ishida, T. Nakajima, Y. Honda, O. Kitao, H. Nakai, M. Klene, X. Li, J. E. Knox, H. P. Hratchian, J. B. Cross, C. Adamo, J. Jaramillo, R. Gomperts, R. E. Stratmann, O. Yazyev, A. J. Austin, R. Cammi, C. Pomelli, J. W. Ochterski, P. Y. Ayala, K. Morokuma, G. A. Voth, P. Salvador, J. J. Dannenberg, V. G. Zakrzewski, S. Dapprich, A. D. Daniels, M. C. Strain, O. Farkas, D. K. Malick, A. D. Rabuck, K. Raghavachari, J. B. Foresman, J. V. Ortiz, Q. Cui, A. G. Baboul, S. Clifford, J. Cioslowski, B. B. Stefanov, G. Liu, A. Liashenko, P. Piskorz, I. Komaromi, R. L. Martin, D. J. Fox, T. Keith, M. A. Al-Laham, C. Y. Peng, A. Nanayakkara, M. Challacombe, P. M. W. Gill, B. Johnson, W. Chen, M. W. Wong, C. Gonzalez, and J. A. Pople, Gaussian, Inc., Pittsburgh PA, 2003.
+</div>
+
+### **Gaussian 98** (Revision A.11)
+
+<div class="well">
+M. J. Frisch, G. W. Trucks, H. B. Schlegel, G. E. Scuseria, M. A. Robb, J. R. Cheeseman, V. G. Zakrzewski, J. A. Montgomery, Jr., R. E. Stratmann, J. C. Burant, S. Dapprich, J. M. Millam, A. D. Daniels, K. N. Kudin, M. C. Strain, O. Farkas, J. Tomasi, V. Barone, M. Cossi, R. Cammi, B. Mennucci, C. Pomelli, C. Adamo, S. Clifford, J. Ochterski, G. A. Petersson, P. Y. Ayala, Q. Cui, K. Morokuma, P. Salvador, J. J. Dannenberg, D. K. Malick, A. D. Rabuck, K. Raghavachari, J. B. Foresman, J. Cioslowski, J. V. Ortiz, A. G. Baboul, B. B. Stefanov, G. Liu, A. Liashenko, P. Piskorz, I. Komaromi, R. Gomperts, R. L. Martin, D. J. Fox, T. Keith, M. A. Al-Laham, C. Y. Peng, A. Nanayakkara, M. Challacombe, P. M. W. Gill, B. Johnson, W. Chen, M. W. Wong, J. L. Andres, C. Gonzalez, M. Head-Gordon, E. S. Replogle, and J. A. Pople, Gaussian, Inc., Pittsburgh PA, 2001.
+</div>
+
+Manual
+------
+
+Manuals are found for both versions of the program:
+
+* [Gaussian 03](http://www.gaussian.com/g_ur/g03mantop.htm)
+* [Gaussian 98](http://www.nsc.liu.se/software/chemistry/gaussian/g98man/index.htm)
+
+FAQs
+----
+
+Do you have a problem? See if someone else has experienced the same before you. [here](http://www.nsc.liu.se/software/chemistry/gaussian/FAQ.html)
+
+Essentials
+----------
+
+To run Gaussian one has to provide it with one input file called xxxx.com where xxxx is an arbitrarily chosen string. The xxxx.com file contains information about the approximation to be used (Hartree-Fock, MP2, etc.), what molecular properties should be calculated, and a list of all atoms and their coordinates. Do not forget the necessary empty line after the last atom in the list of atoms. A sample of input and output files is found below for respective platform.
+
+### Odds and Ends
+
+On distributed memory resources like Monolith and SweGrid, Gaussian should be run in parallel using Linda. Among the Link 0 commands in your input file, you must include
+
+	%NProcLinda=N
+
+in order to run on N CPUs.
+On a shared memory resource like Mozart, Linda is not used, and the corresponding Link 0 command should therefore read as
+
+	%NProcShared=N
+
+On a multi-core shared memory resource like Neolith, you may wish to use a combination of the two parallelization schemes.
+
+See manual for a description of Link 0 directives.
+
+The file size limit on Monolith and SweGrid for Gaussian is 2GB. The read-write file (.rwf) is by far the largest and it may be splitted with the line
+%rwf=/disk/local/tmp1,2GB,/disk/local/tmp2,2GB,/disk/local/tmp3,2GB
+in the xxxx.com input file, see manual .
+Large jobs do per default use the linear scaling exact exchange code which is yet not parellelized with Linda. When running large Linda parallel jobs, you should therefore always enforce use of the old integral code. This is the defult when running the NSC-provided installation of Gaussian, but can otherwise be achieved by inclusion of the keyword
+
+	Int=NoFOFCou
+
+in the xxxx.com input file, see manual.
+
+Gaussian on Neolith
+-------------------
+
+To set the shell environment so that Gaussian can be executed on neolith, you need to add the Gaussian module. Therefore, before the first use of Gaussian, type
+
+	echo "gaussian" > $HOME/.modules
+
+and the gaussian module will be automatically added in the future. You will then get the latest revision of Gaussian 03 as the default program.
+To run Gaussian on Neolith with use of 2 nodes (a total of 16 cores) for 1 hour, submit the shell script below (to the left) to the queue (the submit command is: sbatch scriptname). The input file xxxx.com (to the right) is assumed to be located in the submit directory, and the output file xxxx.out is placed in the same directory. Temporary files created by the program are placed on the node local disk named /scratch/local in order not to slow down the network file system, and the temporary files are removed after the calculation is completed.
+
+	#!/bin/bash                                             %NProcLinda=4
+	#SBATCH -N 2                                            #P HF/cc-pVDZ GFPRINT SCF=Tight
+	#SBATCH -t 1:00:00                                                                    
+	#SBATCH -U name_of_account                              Thiophene                        
+	                                                                                         
+	job=xxxx                                                0  1                             
+	                                                        S  0.000000  0.000000  1.198638  
+	WRKDIR=$(pwd)                                           C  0.000000  1.243024 -0.010683  
+	source $g03root/g03/bsd/g03.profile                     C  0.000000  0.715224 -1.272668  
+	cd $GAUSS_SCRDIR                                        C  0.000000 -1.243024 -0.010683  
+	                                                        C  0.000000 -0.715224 -1.272668  
+	time g03 < $WRKDIR/$job.com > $WRKDIR/$job.out          H  0.000000 -1.319531 -2.173349  
+	                                                        H  0.000000 -2.283992  0.284349  
+	#                                                       H  0.000000  1.319531 -2.173349  
+	# End of script                                         H  0.000000  2.283992  0.284349  
+	#                                                                                      
+	                                                        end of input                     
+<span class="label label-important">Important</span>
+
+* We run 2 Linda workers per node and, by default, each Linda worker will use up to 4 cores (compare line 2 of submit script and line 1 of Gaussian input file).
+* The "-U" directive to SLURM is used for the SNAC accounting. If you have only access to one SNAC account, the scheduler will (with some time delay) schedule your job to that account. If you have more than one SNAC account, the "-U" directive is compulsory.
+* The somewhat indirect way of starting the Gaussian program by first changing directory to $GAUSS_SCRDIR is due to a reported (and seemingly random) problem with Linda.
+
+Gaussian on Monolith
+--------------------
+
+To set the shell environment so that Gaussian can be executed on Monolith, you need to add the Gaussian module. Therefore, before the first use of Gaussian, type
+
+	echo "gaussian" > $HOME/.modules
+
+and the gaussian module will be automatically added in the future. You will then get the latest revision of Gaussian 03 as the default program. If you wish to run Gaussian 98 you instead type
+
+	echo "gaussian98" > $HOME/.modules
+
+Do not attempt to have both modules loaded in the same log-in session, that will cause a conflict.
+To run Gaussian on Monolith with use of 4 processors (2 nodes with 2 processors each) for 1 hour, submit the shell script below to the queue (the submit command is: qsub scriptname). The input file xxxx.com is assumed to be located in the submit directory, and the output file xxxx.out is placed in the same directory. Temporary files created by the program are placed on the node local disk named /disk/local in order not to slow down the network file system (NFS), and the temporary files are removed after the calculation is completed.
+
+	#!/bin/bash
+	#PBS -l walltime=1:00:00
+	#PBS -l nodes=2:ppn=2
+
+	job=xxxx
+
+	#
+	# Choose program version in accordance with the .module file.
+	#
+	prg=g03
+	#prg=g98
+
+	export GAUSS_LFLAGS="-nodelist \"`cat $PBS_NODEFILE`\"  -mp 2"
+
+	cd $PBS_O_WORKDIR
+	time ${prg}l < $job.com > $job.out
+
+	#
+	# End of script
+	#
+
+Gaussian on Mozart
+-------------------
+
+To set the shell environment so that Gaussian can be executed on Mozart, you need to add the Gaussian module. Therefore, before the first use of Gaussian, type
+
+	echo "gaussian" > $HOME/.modules
+
+and the gaussian module will be automatically added in the future. You will then get the latest revision of Gaussian 03 as the default program. The old version Gaussian 98 is available by addition of the module "gaussian/g98". Do not have the g98 and g03 modules loaded at the same time.
+To run Gaussian on Mozart with use of 4 processors with use of 10GB memory for 1 hour (memory allocation is given in xxxx.com), submit the shell script below to the queue (the submit command is: qsub scriptname). The input file xxxx.com is assumed to be located in the directory $HOME/calc/, and the output file xxxx.out is placed in the same directory. Temporary files created by the program are placed on the disk named /scratch/$USER, and the temporary files are deleted after the calculation is completed.
+
+	#!/bin/bash
+	#PBS -l walltime=1:00:00
+	#PBS -l nodes=1:ppn=4
+
+	job=xxxx
+
+	cd $PBS_O_WORKDIR
+	time g03 < $job.com > $job.out
+
+	#
+	# End of script
+	#
+
+<div class="alert alert-info">
+<b>Recommendations</b>:<br>
+Mozart is a unique resource and it serves the community best if we do not load it with jobs that can be run on a cluster system. In concern with Gaussian on Mozart, please respect the following recommendations:
+Use Mozart for:
+Non-Linda parallel calculations (e.g. MP4).
+OpenMP parallel calculations in general with exceedingly large memory requirements per rank.
+Allocations of in between 1-16 CPUs.
+Do not use Mozart for:
+Calculations with the Mem variable set to less than 2GB.
+Calculations with an NProcLinda in the input file.
+</div>
+
+Gaussian on SweGrid
+-------------------
+
+To run Gaussian 03 on SweGrid with use of 4 processors for 10 minutes, submit the xRSL script below (the submit command is: ngsub -f scriptname). The input file xxxx.com is assumed to be located in the submit directory, and the output file xxxx.log is stored on the SweGrid resource after the calculation has finished. The result files can be retrieved from the SweGrid resource in different ways. In this example, the output and checkpoint files (in addition to log-files) are fetched with the command: ngget jobname.
+
+	&(jobname="SC4H4")
+	 (count=4)
+	 (cputime="10 minutes")
+	 (executable="/usr/bin/time")
+	 (arguments="g03l" "SC4H4.com")
+	 (inputfiles=("SC4H4.com" ""))
+	 (outputfiles=("SC4H4.log" "")("SC4H4.chk" ""))
+	 (runtimeenvironment="APPS/CHEM/GAUSSIAN-03.C02")
+	 (gmlog="gmlog")
+	 (stdout="stdout")
+	 (stderr="stderr")
+
+Note:
+
+* Before submission can be done, you must acquire a valid token or proxy for SweGrid (the command to use is grid-proxy-init) [details].
+
+* The result files are kept on the SweGrid resource for a limited time only. Remember to retrieve result files [details].
+
+Gaussian on Green
+-----------------
+
+To set the shell environment so that Gaussian can be executed on Green, you need to add the Gaussian module. Therefore, before the first use of Gaussian, type
+
+	echo "gaussian" > $HOME/.modules
+
+and the gaussian module will be automatically added in the future. You will then get the latest revision of Gaussian 03 as the default program. To run Gaussian on Green with use of 4 processor for 1 hour, submit the shell script below to the queue (the submit command is: qsub scriptname). The input file xxxx.com is assumed to be located in the submit directory, and the output file xxxx.out is placed in the same directory. Temporary files created by the program are placed on the node local disk named /disk/local in order not to slow down the network file system (NFS), and the temporary files are removed after the calculation is completed.
+
+	#!/bin/bash
+	#PBS -l walltime=1:00:00
+	#PBS -l nodes=4
+
+	export GAUSS_LFLAGS="-nodelist \"`cat $PBS_NODEFILE`\" \
+	-opt \"Tsnet.Node.lindarsharg:ssh\""
+
+	job=xxxx
+
+	cd $PBS_O_WORKDIR
+	time g03l < $job.com > $job.out
+
+	#
+	# End of script
+	#
+
+Note:
+
+The option in the environment variable GAUSS_LFLAGS is needed on Green.
+
+

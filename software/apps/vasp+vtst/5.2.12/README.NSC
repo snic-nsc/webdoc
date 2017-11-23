@@ -1,0 +1,8 @@
+# Unsupport build of VASP with VTST tools
+
+Custom source patches
+
+--- BEGIN METADATA ---
+description: VASP 5.2.12 + VTST patches
+supported: no
+--- END METADATA ---

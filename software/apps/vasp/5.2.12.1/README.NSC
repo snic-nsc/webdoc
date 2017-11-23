@@ -1,0 +1,20 @@
+VASP 5.2.12 + bugfixes as of Nov 11 2011
+====================================================
+
+The source code for version was downloaded from VASP home page on 2011-11-21. It is abbreviated as 5.2.12.1 for simplicity.
+
+Some of the bugfixes:
+
+* Linear response NMR now works for -DNGZhalf
+* Improved gfortran compatibilty (PL: only older versions work)
+* FPP instead of CPP during compilation
+* Fixed a rare bug with forces
+* GW bugfixes
+* vdW-DFT improvements incl stress tensor
+* M06 meta-gga
+
+--- BEGIN METADATA ---
+description: VASP 5.2.12 (2011-11-11)
+supported: supported
+systems: [Triolith]
+--- END METADATA ---

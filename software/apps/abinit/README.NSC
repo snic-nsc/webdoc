@@ -1,0 +1,39 @@
+ABINIT installations at NSC
+===========================
+
+The ABINIT installations are generally maintained by Peter Larsson (pla@nsc.liu.se).
+
+Upgrade policy
+--------------
+
+We will compile, test and provide to most recent version of ABINIT within one month after release. Each version gets its own subdirectory and module. **Old versions do not get removed**, but a warning message may be added to versions having serious problems.
+
+How to run
+----------
+
+Launch the desired ABINIT binary with "mpprun":
+
+    mpprun /software/apps/abinit/6.12.3/build01/bin/abinit < job.files >& out
+
+Example batch script
+--------------------
+
+A minimum batch script for running QE looks like this:
+
+    #!/bin/bash
+    #SBATCH -N 1
+    #SBATCH -t 8:00:00
+    #SBATCH -J jobname
+    #SBATCH --exclusive
+    #SBATCH -A SNIC-xxx-yyy
+
+    mpprun /software/apps/abinit/6.12.3/build01/bin/abinit < job.files >& out
+
+(Note that you should edit the jobname and the account number before submitting.)
+
+--- BEGIN METADATA ---
+description: <a href="www.abinit.org">[ABINIT]</a> electronic structure program
+support: tier2
+systems: [triolith]
+--- END METADATA ---
+

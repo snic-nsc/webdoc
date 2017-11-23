@@ -1,0 +1,74 @@
+VASP installations at NSC
+=========================
+
+The VASP installations are generally maintained by Peter Larsson (pla@nsc.liu.se).
+
+Upgrade policy
+--------------
+
+We will compile, test and provide to most recent version of VASP within a few weeks after release. Each version gets its own subdirectory and module. **Old versions do not get removed**, but a warning message may be added to versions having serious problems.
+
+Naming scheme for binaries
+---------------------------
+
+It is customary to produce several versions of VASP. The following scheme is used at NSC:
+
+| Name       | Description |
+| ---------- | ----------- |
+| vasp       | Softlink to vasp-half |
+| vasp-half  | vasp compiled with -DNGZhalf, "normal" version for bulk system |
+| vasp-gamma | compiled with -DNGZhalf and -DwNGZhalf, gamma-point only (big supercells or clusters) |
+| vasp-full  | compiled without -DNGZ*, for spin-orbit/non-collinear calculations. |
+
+It is strongly recommended to use either "vasp-half" or "vasp-gamma" if possible, in order to decrease memory usage.
+
+How to run
+----------
+
+Load the VASP module corresponding to the version you want to use. We strongly recommend to use the latest version of VASP, many of the earlier releases in the 5.2-series had severe bugs.
+
+    module load vasp/5.2.12.1
+
+Then launch the desired VASP binary with "mpprun":
+
+    mpprun vasp-half
+
+Example batch script
+--------------------
+
+A minimum batch script for running VASP looks like this:
+
+    #!/bin/bash
+    #SBATCH -N 4
+    #SBATCH -t 4:00:00
+    #SBATCH -J jobname
+    #SBATCH --exclusive
+    #SBATCH -A SNIC-xxx-yyy
+
+    module load vasp/version
+    mpprun vasp-[half/gamma/full]
+
+(Note that you should edit the jobname and the account number before submitting.)
+
+<div class="alert">
+
+<strong>About NPAR</strong><br>
+When running one more than node using MPI, set NPAR=number of nodes/2 for best performance.
+</div>
+
+Known problems
+--------------
+
+* Running small jobs in a wide parallel fashion sometimes fails to due bugs in the parallelization of VASP. Try to have at least 1 atom per CPU core (or 4 bands per MPI rank). It can help to set LSCALAPACK=.FALSE.
+
+* NEB calculations can become frozen, if one of the images finished a long time before the others.
+
+
+--- BEGIN METADATA ---
+description: Vienna ab initio simulation package <a href="https://cms.mpi.univie.ac.at/marsweb/index.php?option=com_content&view=article&id=59&Itemid=68">[Link]</a>
+systems: [triolith]
+support: tier1
+tested: no
+tags: [recommended,deprecated] 
+--- END METADATA ---
+

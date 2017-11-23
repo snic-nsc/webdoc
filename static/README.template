@@ -1,0 +1,167 @@
+## -*- coding: utf-8 -*-
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>NSC Software Information - ${pagename}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="https://maxcdn.bootstrapcdn.com/twitter-bootstrap/2.0.4/css/bootstrap-combined.min.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+    </style>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="brand" href="http://www.nsc.liu.se"><b>NSC</b></a>
+
+          <!-- clone of NSC old navbar -->
+          <div class="nav-collapse collapse">
+            <b>
+            <ul class="nav">
+              <li class="">
+                <a href="http://www.nsc.liu.se/start">Start</a>
+              </li>
+              <li class="">
+                <a href="http://www.nsc.liu.se/systems">Systems</a>
+              </li>
+              <li class="">
+                <a href="http://www.nsc.liu.se/software">Software (main)</a>
+              </li>
+              <li class="">
+                <a href="http://www.nsc.liu.se/rd">R &amp; D</a>
+              </li>
+              <li class="">
+                <a href="http://www.nsc.liu.se/about">About NSC</a>
+              </li>
+            </ul>
+            </b>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span3">
+          <div class="hero-unit">
+            <h2>${system}</h2>
+            <p>Software installations</p>
+          </div>
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              % for (category,apps) in tree[basename].iteritems():
+                <li class="nav-header">${category}</li>
+                % for app in sorted(list(apps.keys())):
+                    <li>
+                      <a href="${system}-${basename}-${category}-${app}.html">${app}</a>
+                    </li>
+                % endfor
+              % endfor
+            </ul>
+          </div><!--/.well -->
+        </div><!--/span-->
+        <div class="span9">
+
+          <ul class="breadcrumb">
+            % for (version,link) in breadcrumb[0:-1]:
+            <li>
+              <a href=${link}>${version}</a> <span class="divider">/</span>
+            </li>
+            % endfor
+            <li class="active">
+              <a href=${breadcrumb[-1][1]}>${breadcrumb[-1][0]}</a> <span class="divider">/</span>
+            </li>
+          </ul>
+
+          ${payload1}
+          <br>
+          % if len(versions) > 0 and level > 0 :
+          <p>Directory list:</p>
+          <table class="table table-striped table-bordered">
+            <thead>
+              <tr><th>Version</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              % for (version,link,description) in versions:
+              <tr>
+                <th>
+                  <a href="${link}">${version}</a>
+                </th>
+                <th>${description}</th></tr>
+              % endfor
+            </tbody>
+          </table>
+          % endif
+
+          % if "tags" in metadata:
+            % if "deprecated" in metadata["tags"]:
+            <div class="alert alert-error">
+              <b>This installation is deprecated!</b> NSC recommends that you do not use this installation unless you absolutely know what you are doing. You are seeing this message either because serious problems were discovered in this installation, or a new version was released that supersedes this one.
+            </div>
+            % endif
+            % if "recommended" in metadata["tags"]:
+            <div class="alert alert-success">
+              <b>This is the program version that is currently recommended by NSC.</b>
+            </div>
+            % endif
+          % endif
+          % if "tested" in metadata:
+            % if metadata["tested"] == False:
+            <div class="alert alert-block">
+              <b>This is an untested installation!</b> NSC recommends that you proceed with caution and report any problems to support@nsc.liu.se.
+            </div>
+            % endif
+          % endif
+          % if "support" in metadata:
+            <h2>Level of support</h2>
+            % if metadata["support"].lower() == "tier1":
+              <div class="alert alert-info">
+              <b>Tier 1</b> NSC has at least one application expert on staff with knowledge about this software, and we will try to help you with any problems. We have also ran some internal tests to make sure that the program is working as intended. NSC also commits to installing updates to this program as they become available.<br><br>Please see the page describing our <a href="${system}-${basename}.html">software support categories</a> for more information.<br> You can also contact support@nsc.liu.se for further information.
+              </div>
+            % elif metadata["support"].lower() == "tier2":
+              <div class="alert alert-info">
+              <b>Tier 2</b> NSC has only limited experience with this software, but we will try to help as much as possible. We have ran some tests, for example, if the program comes with a test suite, but they may be far from exhaustive. We will try to install and test new versions, as soon as we can.<br><br>Please see the page describing our <a href="${system}-${basename}.html">software support categories</a> for more information.<br> You can also contact support@nsc.liu.se for further information.
+              </div>
+            % else:
+              <div class="alert alert-info">
+              <b>Tier 3</b> NSC will not be able to help you much with this program, either because we lack the in-house experience, or because it is a test installation. In general, these types of installations are untested, and will not be updated unless you send a request to NSC.<br><br>Please see the page describing our <a href="${system}-${basename}.html">software support categories</a> for more information.<br> You can also contact support@nsc.liu.se for further information.
+              </div>
+            % endif
+          % endif
+          ${payload2}
+        </div><!--/span-->
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <p>&copy; National Supercomputer Centre, Linköping, Sweden 2012</p>
+      </footer>
+
+    </div><!--/.fluid-container-->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://maxcdn.bootstrapcdn.com/twitter-bootstrap/2.0.4/js/bootstrap.min.js"></script>
+  </body>
+</html>

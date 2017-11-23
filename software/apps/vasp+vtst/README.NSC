@@ -1,0 +1,9 @@
+# Skeleton for VASP VTST
+
+Hubba bubba
+
+--- BEGIN METADATA ---
+description: VASP + VTST patches (for NEB)
+supported: no
+systems: [Triolith,Kappa,Matter]
+--- END METADATA ---
